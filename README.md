@@ -1,39 +1,103 @@
-<!-- 
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
+Flutter component for list and search a simple or complex data items, similar to contact list.
 
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/guides/libraries/writing-package-pages). 
+### Demo:
 
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-library-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/developing-packages). 
--->
+![](demo.gif)
 
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
+### Features
+- Search/filter items;
+- Customization (default is app Theme);
+- Build your own Widget to show;
+- Easy to use (Besides being beautifull 💅🏼);
 
-## Features
+### Usage
 
-TODO: List what your package can do. Maybe include images, gifs, or videos.
-
-## Getting started
-
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
-
-## Usage
-
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder. 
-
-```dart
-const like = 'sample';
+Depend on it:
+```yaml
+dependencies:
+  alphabet_search_view: ^1.0.0
 ```
 
-## Additional information
+Import it:
 
-TODO: Tell users more about the package: where to find more information, how to 
-contribute to the package, how to file issues, what response they can expect 
-from the package authors, and more.
+```dart
+import 'package:alphabet_search_view/alphabet_search_view.dart';
+```
+
+Example:
+
+Simple use:
+```dart
+final myStringList = [
+    'Katlego Dhaval',
+    'Belenos Haniya',
+    'Alaattin Ísak',
+    'Ephraim Ríghnach',
+    'Heli Jerahmeel',
+];
+
+AlphabetSearchView.stringList(
+    list: myStringList,
+),
+```
+
+Model:
+```dart
+final myModelList = [
+    AlphabetSearchModel(title: 'Katlego Dhaval', subtitle: 'Dad'),
+    AlphabetSearchModel(title: 'Belenos Haniya', subtitle: 'Friend'),
+    AlphabetSearchModel(title: 'Alaattin Ísak', subtitle: 'Friend'),
+    AlphabetSearchModel(title: 'Ephraim Ríghnach', subtitle: 'Uncle'),
+    AlphabetSearchModel(title: 'Heli Jerahmeel', subtitle: 'Friend'),
+];
+
+AlphabetSearchView.modelList(
+    list: myModelList,
+),
+```
+
+With build:
+```dart
+final myStringList = [
+    'Katlego Dhaval',
+    'Belenos Haniya',
+    'Alaattin Ísak',
+    'Ephraim Ríghnach',
+    'Heli Jerahmeel',
+];
+
+AlphabetSearchView.stringList(
+    list: myStringList,
+    buildItem: (context, index, item) => Card(
+        child: Text(item.title),
+    ),
+),
+```  
+
+With tap callback:
+```dart
+AlphabetSearchView.stringList(
+    list: myStringList,
+    onItemTap: (context, index, item) {
+        print(item.title);
+    },
+),
+```  
+
+## Customization
+
+```dart
+AlphabetSearchView.stringList(
+    decoration: AlphabetSearchDecoration.fromContext(
+        context,
+        withSearch?: false, // default is: true
+        titleStyle?: TextStyle(...), // default is: TextTheme.subtitle1
+        subtitleStyle?: TextStyle(...), // default is: TextTheme.bodyText2
+        letterHeaderTextStyle?: TextStyle(...), // default is: TextTheme.headline2
+        dividerThickness?: double, // default is: 1
+        color?: Color, // default is: ColorScheme.primary
+        backgroundColor?: Color, // default is: Theme.scaffoldBackgroundColor
+    ),
+    list: myStringList,
+),
+```  

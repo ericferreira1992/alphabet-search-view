@@ -1,17 +1,22 @@
 name: alphabet_search_view
 description: A scrollable ListView which you can search by dragging, normal scrolling, letter scrolling or letter clicking.
 version: 1.0.0
-homepage:
+homepage: https://github.com/ericferreira1992/alphabet-search-view
+repository: https://github.com/ericferreira1992/alphabet-search-view
 
 environment:
   sdk: ">=2.16.2 <3.0.0"
   flutter: ">=1.17.0"
 
+scripts:
+  dev: flutter run -d all --flavor dev -t lib/main_development.dart
+
 dependencies:
   flutter:
     sdk: flutter
 
-  scrollable_positioned_list: "0.3.1"
+  async: "^2.8.2"
+  scrollable_positioned_list: "^0.3.1"
 
 dev_dependencies:
   flutter_test:
