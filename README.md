@@ -2,7 +2,7 @@ Flutter component for list and search a simple or complex data items, similar to
 
 ## Demo ([live](ericferreira1992.github.io/alphabet-search-view)):
 
-![](demo.gif)
+![](https://github.com/ericferreira1992/alphabet-search-view/raw/main/demo.gif)
 
 ## Features
 - Search/filter items;
