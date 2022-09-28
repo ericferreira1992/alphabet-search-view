@@ -1,6 +1,6 @@
 Flutter component for list and search a simple or complex data items, similar to contact list.
 
-## Demo:
+## Demo ([live](ericferreira1992.github.io/alphabet-search-view)):
 
 ![](demo.gif)
 
