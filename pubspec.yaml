@@ -8,9 +8,6 @@ environment:
   sdk: ">=2.16.2 <3.0.0"
   flutter: ">=1.17.0"
 
-scripts:
-  dev: flutter run -d all --flavor dev -t lib/main_development.dart
-
 dependencies:
   flutter:
     sdk: flutter
