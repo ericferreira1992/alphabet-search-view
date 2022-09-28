@@ -15,7 +15,7 @@ Flutter component for list and search a simple or complex data items, similar to
 Adding in `pubspec.yaml`:
 ```yaml
 dependencies:
-  alphabet_search_view: ^1.0.0
+  alphabet_search_view: ^1.0.1
 ```
 
 Import it where you want to use:
