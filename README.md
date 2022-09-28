@@ -1,30 +1,29 @@
 Flutter component for list and search a simple or complex data items, similar to contact list.
 
-### Demo:
+## Demo:
 
 ![](demo.gif)
 
-### Features
+## Features
 - Search/filter items;
 - Customization (default is app Theme);
 - Build your own Widget to show;
 - Easy to use (Besides being beautifull 💅🏼);
 
-### Usage
+## Usage
 
-Depend on it:
+Adding in `pubspec.yaml`:
 ```yaml
 dependencies:
   alphabet_search_view: ^1.0.0
 ```
 
-Import it:
-
+Import it where you want to use:
 ```dart
 import 'package:alphabet_search_view/alphabet_search_view.dart';
 ```
 
-Example:
+### Example:
 
 Simple use:
 ```dart
