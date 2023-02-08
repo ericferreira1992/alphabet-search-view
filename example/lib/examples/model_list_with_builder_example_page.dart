@@ -58,7 +58,7 @@ class _ModeListWithBuilderExamplePageState
       ),
       body: SafeArea(
         bottom: false,
-        child: AlphabetSearchView<DataItem>(
+        child: AlphabetSearchView<DataItem>.list(
           decoration: AlphabetSearchDecoration.fromContext(
             context,
             titleStyle: Theme.of(context).textTheme.subtitle1?.copyWith(

@@ -8,22 +8,57 @@ import 'package:flutter/material.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 class AlphabetSearchView<T> extends StatefulWidget {
-  final List<AlphabetSearchModel<T>> list;
-  final AlphabetSearchDecoration? decoration;
+  final List<AlphabetSearchModel<T>> _list;
+  final AlphabetSearchDecoration? _decoration;
   final void Function(
-      BuildContext context, int index, AlphabetSearchModel<T> item)? onItemTap;
+      BuildContext context, int index, AlphabetSearchModel<T> item)? _onItemTap;
   final Widget Function(
-      BuildContext context, int index, AlphabetSearchModel<T> item)? buildItem;
-  final bool debugMode;
+      BuildContext context, int index, AlphabetSearchModel<T> item)? _buildItem;
+  final bool _debugMode;
 
-  const AlphabetSearchView({
+  const AlphabetSearchView._internal({
     Key? key,
-    required this.list,
-    this.onItemTap,
-    this.buildItem,
-    this.decoration,
-    this.debugMode = false,
-  }) : super(key: key);
+    required List<AlphabetSearchModel<T>> list,
+    Function(BuildContext context, int index, AlphabetSearchModel<T> item)?
+        onItemTap,
+    Widget Function(
+            BuildContext context, int index, AlphabetSearchModel<T> item)?
+        buildItem,
+    AlphabetSearchDecoration? decoration,
+    required bool debugMode,
+  })  : _list = list,
+        _buildItem = buildItem,
+        _onItemTap = onItemTap,
+        _decoration = decoration,
+        _debugMode = debugMode,
+        super(key: key);
+
+  factory AlphabetSearchView.list({
+    Key? key,
+    required List<AlphabetSearchModel<T>> list,
+    Function(BuildContext context, int index, AlphabetSearchModel<T> item)?
+        onItemTap,
+    Widget Function(
+            BuildContext context, int index, AlphabetSearchModel<T> item)?
+        buildItem,
+    AlphabetSearchDecoration? decoration,
+    bool debugMode = false,
+  }) {
+    assert(list.isNotEmpty,
+        'Property list can\'t be empty, it needs to have at least 1 element on the list.');
+    list.sort((a, b) => a.title.compareTo(b.title));
+    return AlphabetSearchView._internal(
+      key: key,
+      list: list
+          .where((item) => item.title.isNotEmpty)
+          .toList()
+          .cast<AlphabetSearchModel<T>>(),
+      onItemTap: onItemTap,
+      buildItem: buildItem,
+      decoration: decoration,
+      debugMode: debugMode,
+    );
+  }
 
   @override
   State<AlphabetSearchView<T>> createState() => AlphabetSearchViewState<T>();
@@ -31,8 +66,8 @@ class AlphabetSearchView<T> extends StatefulWidget {
 
 class AlphabetSearchViewState<T> extends State<AlphabetSearchView<T>> {
   late final AlphabetSearchDecoration decoration =
-      widget.decoration ?? AlphabetSearchDecoration.fromDefault(context);
-  late final bool debugMode = widget.debugMode;
+      widget._decoration ?? AlphabetSearchDecoration.fromDefault(context);
+  late final bool debugMode = widget._debugMode;
   late final searchTextController = TextEditingController(text: '');
 
   final key = GlobalKey();
@@ -41,18 +76,18 @@ class AlphabetSearchViewState<T> extends State<AlphabetSearchView<T>> {
   final itemScrollListener = ItemPositionsListener.create();
 
   late final currentLetterController = CurrentLetterController(
-    widget.list.first.letter,
+    widget._list.first.letter,
   );
   late final targetLetterController = TargetLetterController(null);
 
   late final Function(
           BuildContext context, int index, AlphabetSearchModel<T> item)?
-      onItemTap = widget.onItemTap;
+      onItemTap = widget._onItemTap;
   late final Widget Function(
           BuildContext context, int index, AlphabetSearchModel<T> item)?
-      buildItem = widget.buildItem;
+      buildItem = widget._buildItem;
 
-  late List<AlphabetSearchModel<T>> filteredList = widget.list;
+  late List<AlphabetSearchModel<T>> filteredList = widget._list;
 
   LetterChar? get targetLetter => targetLetterController.value;
 
@@ -538,13 +573,13 @@ class AlphabetSearchViewState<T> extends State<AlphabetSearchView<T>> {
     if (newText != previousSearchText) {
       previousSearchText = newText;
       if (newText.isNotEmpty) {
-        filteredList = widget.list
+        filteredList = widget._list
             .where((x) =>
                 (x.title.toLowerCase() + (x.subtitle?.toLowerCase() ?? ''))
                     .contains(newText))
             .toList();
       } else {
-        filteredList = widget.list;
+        filteredList = widget._list;
       }
 
       if (needToSetState) {

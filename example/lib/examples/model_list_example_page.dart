@@ -17,7 +17,7 @@ class ModelListExamplePage extends StatelessWidget {
       ),
       body: SafeArea(
         bottom: false,
-        child: AlphabetSearchView<String>(
+        child: AlphabetSearchView<String>.list(
           decoration: AlphabetSearchDecoration.fromContext(context,
               titleStyle: Theme.of(context).textTheme.subtitle1?.copyWith(
                     fontWeight: FontWeight.w600,

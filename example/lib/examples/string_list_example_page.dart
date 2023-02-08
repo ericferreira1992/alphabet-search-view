@@ -15,7 +15,7 @@ class StringListExamplePage extends StatelessWidget {
       ),
       body: SafeArea(
         bottom: false,
-        child: AlphabetSearchView<String>(
+        child: AlphabetSearchView<String>.list(
           list: List.generate(
               500,
               (e) => AlphabetSearchModel<String>(
