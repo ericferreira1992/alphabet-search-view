@@ -15,10 +15,13 @@ class StringListExamplePage extends StatelessWidget {
       ),
       body: SafeArea(
         bottom: false,
-        child: AlphabetSearchView.stringList(
-          list: List.generate(500,
-                  (e) => faker.name.firstName() + ' ' + faker.name.lastName())
-              .toList(),
+        child: AlphabetSearchView<String>(
+          list: List.generate(
+              500,
+              (e) => AlphabetSearchModel<String>(
+                    title: faker.name.firstName() + ' ' + faker.name.lastName(),
+                    data: faker.name.firstName() + ' ' + faker.name.lastName(),
+                  )).toList(),
         ),
       ),
     );

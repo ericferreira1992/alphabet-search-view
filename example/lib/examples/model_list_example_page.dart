@@ -17,7 +17,7 @@ class ModelListExamplePage extends StatelessWidget {
       ),
       body: SafeArea(
         bottom: false,
-        child: AlphabetSearchView.modelList(
+        child: AlphabetSearchView<String>(
           decoration: AlphabetSearchDecoration.fromContext(context,
               titleStyle: Theme.of(context).textTheme.subtitle1?.copyWith(
                     fontWeight: FontWeight.w600,
@@ -29,9 +29,10 @@ class ModelListExamplePage extends StatelessWidget {
               'Music gender: ${faker.music.genre()}.',
               'Website: ${faker.internet.url()}.',
             ];
-            return AlphabetSearchModel(
+            return AlphabetSearchModel<String>(
               title: name,
               subtitle: info.join('\n'),
+              data: name,
             );
           }).toList(),
         ),

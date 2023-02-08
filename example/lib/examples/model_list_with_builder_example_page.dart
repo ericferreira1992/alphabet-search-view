@@ -5,12 +5,50 @@ import 'package:faker_dart/faker_dart.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-class ModeListWithBuilderExamplePage extends StatelessWidget {
-  ModeListWithBuilderExamplePage({Key? key}) : super(key: key);
+class DataItem {
+  final String name;
+  final String website;
+  final String genre;
+  final String birthdate;
 
+  DataItem({
+    required this.name,
+    required this.website,
+    required this.genre,
+    required this.birthdate,
+  });
+}
+
+class ModeListWithBuilderExamplePage extends StatefulWidget {
+  const ModeListWithBuilderExamplePage({Key? key}) : super(key: key);
+
+  @override
+  State<ModeListWithBuilderExamplePage> createState() =>
+      _ModeListWithBuilderExamplePageState();
+}
+
+class _ModeListWithBuilderExamplePageState
+    extends State<ModeListWithBuilderExamplePage> {
   final faker = Faker.instance;
+
   final random = Random();
+
   final formatter = DateFormat('dd/MM/yyyy');
+
+  late List<DataItem> listItems;
+
+  @override
+  void initState() {
+    super.initState();
+    listItems = List.generate(500, (e) {
+      return DataItem(
+        name: faker.name.firstName() + ' ' + faker.name.lastName(),
+        birthdate: formatter.format(faker.date.past(DateTime.now())),
+        website: faker.internet.url(),
+        genre: faker.music.genre(),
+      );
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,32 +58,33 @@ class ModeListWithBuilderExamplePage extends StatelessWidget {
       ),
       body: SafeArea(
         bottom: false,
-        child: AlphabetSearchView.modelList(
+        child: AlphabetSearchView<DataItem>(
           decoration: AlphabetSearchDecoration.fromContext(
             context,
             titleStyle: Theme.of(context).textTheme.subtitle1?.copyWith(
                   fontWeight: FontWeight.w600,
                 ),
           ),
-          list: List.generate(500, (e) {
-            final name = faker.name.firstName() + ' ' + faker.name.lastName();
-            final info = [
-              'Birthdate: ${formatter.format(faker.date.past(DateTime.now()))}.',
-              'Music gender: ${faker.music.genre()}.',
-              'Website: ${faker.internet.url()}.',
-            ];
-            return AlphabetSearchModel(
-              title: name,
-              subtitle: info.join('\n'),
-            );
-          }).toList(),
+          list: listItems
+              .map(
+                (e) => AlphabetSearchModel<DataItem>(
+                  title: e.name,
+                  subtitle: e.genre,
+                  data: e,
+                ),
+              )
+              .toList(),
           onItemTap: (_, __, item) {
             ScaffoldMessenger.of(context).clearSnackBars();
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
               content: Text(item.title),
             ));
           },
-          buildItem: (_, __, item) {
+          buildItem: (_, index, item) {
+            // return ListTile(
+            //   title: Text(item.title),
+            //   subtitle: Text(item.data.name),
+            // );
             return Padding(
               padding: const EdgeInsets.symmetric(
                 horizontal: 10,
@@ -66,9 +105,12 @@ class ModeListWithBuilderExamplePage extends StatelessWidget {
                             .image,
                       ),
                       border: Border.all(
-                        width: 5,
-                        color: Theme.of(context).textTheme.bodyText1!.color!.withOpacity(.1)
-                      ),
+                          width: 5,
+                          color: Theme.of(context)
+                              .textTheme
+                              .bodyText1!
+                              .color!
+                              .withOpacity(.1)),
                     ),
                   ),
                   const SizedBox(width: 12),

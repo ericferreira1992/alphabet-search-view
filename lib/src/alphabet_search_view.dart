@@ -7,88 +7,32 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
-class AlphabetSearchView extends StatefulWidget {
-  final List<AlphabetSearchModel> _list;
-  final AlphabetSearchDecoration? _decoration;
+class AlphabetSearchView<T> extends StatefulWidget {
+  final List<AlphabetSearchModel<T>> list;
+  final AlphabetSearchDecoration? decoration;
   final void Function(
-      BuildContext context, int index, AlphabetSearchModel item)? _onItemTap;
+      BuildContext context, int index, AlphabetSearchModel<T> item)? onItemTap;
   final Widget Function(
-      BuildContext context, int index, AlphabetSearchModel item)? _buildItem;
-  final bool _debugMode;
+      BuildContext context, int index, AlphabetSearchModel<T> item)? buildItem;
+  final bool debugMode;
 
-  const AlphabetSearchView._internal({
+  const AlphabetSearchView({
     Key? key,
-    required List<AlphabetSearchModel> list,
-    Function(BuildContext context, int index, AlphabetSearchModel item)?
-        onItemTap,
-    Widget Function(BuildContext context, int index, AlphabetSearchModel item)?
-        buildItem,
-    AlphabetSearchDecoration? decoration,
-    required bool debugMode,
-  })  : _list = list,
-        _buildItem = buildItem,
-        _onItemTap = onItemTap,
-        _decoration = decoration,
-        _debugMode = debugMode,
-        super(key: key);
-
-  factory AlphabetSearchView.stringList({
-    Key? key,
-    required List<String> list,
-    void Function(BuildContext context, int index, AlphabetSearchModel item)?
-        onItemTap,
-    Widget Function(BuildContext context, int index, AlphabetSearchModel item)?
-        buildItem,
-    AlphabetSearchDecoration? decoration,
-    bool debugMode = false,
-  }) {
-    assert(list.isNotEmpty,
-        'Property list can\'t be empty, it needs to have at least 1 element on the list.');
-    list.sort((a, b) => a.compareTo(b));
-    return AlphabetSearchView._internal(
-      key: key,
-      list: list
-          .where((text) => text.isNotEmpty)
-          .map((text) => AlphabetSearchModel(title: text))
-          .toList(),
-      onItemTap: onItemTap,
-      buildItem: buildItem,
-      decoration: decoration,
-      debugMode: debugMode,
-    );
-  }
-
-  factory AlphabetSearchView.modelList({
-    Key? key,
-    required List<AlphabetSearchModel> list,
-    Function(BuildContext context, int index, AlphabetSearchModel item)?
-        onItemTap,
-    Widget Function(BuildContext context, int index, AlphabetSearchModel item)?
-        buildItem,
-    AlphabetSearchDecoration? decoration,
-    bool debugMode = false,
-  }) {
-    assert(list.isNotEmpty,
-        'Property list can\'t be empty, it needs to have at least 1 element on the list.');
-    list.sort((a, b) => a.title.compareTo(b.title));
-    return AlphabetSearchView._internal(
-      key: key,
-      list: list.where((item) => item.title.isNotEmpty).toList(),
-      onItemTap: onItemTap,
-      buildItem: buildItem,
-      decoration: decoration,
-      debugMode: debugMode,
-    );
-  }
+    required this.list,
+    this.onItemTap,
+    this.buildItem,
+    this.decoration,
+    this.debugMode = false,
+  }) : super(key: key);
 
   @override
-  State<AlphabetSearchView> createState() => AlphabetSearchViewState();
+  State<AlphabetSearchView<T>> createState() => AlphabetSearchViewState<T>();
 }
 
-class AlphabetSearchViewState extends State<AlphabetSearchView> {
+class AlphabetSearchViewState<T> extends State<AlphabetSearchView<T>> {
   late final AlphabetSearchDecoration decoration =
-      widget._decoration ?? AlphabetSearchDecoration.fromDefault(context);
-  late final bool debugMode = widget._debugMode;
+      widget.decoration ?? AlphabetSearchDecoration.fromDefault(context);
+  late final bool debugMode = widget.debugMode;
   late final searchTextController = TextEditingController(text: '');
 
   final key = GlobalKey();
@@ -97,21 +41,25 @@ class AlphabetSearchViewState extends State<AlphabetSearchView> {
   final itemScrollListener = ItemPositionsListener.create();
 
   late final currentLetterController = CurrentLetterController(
-    widget._list.first.letter,
+    widget.list.first.letter,
   );
   late final targetLetterController = TargetLetterController(null);
 
   late final Function(
-          BuildContext context, int index, AlphabetSearchModel item)?
-      onItemTap = widget._onItemTap;
+          BuildContext context, int index, AlphabetSearchModel<T> item)?
+      onItemTap = widget.onItemTap;
   late final Widget Function(
-          BuildContext context, int index, AlphabetSearchModel item)?
-      buildItem = widget._buildItem;
+          BuildContext context, int index, AlphabetSearchModel<T> item)?
+      buildItem = widget.buildItem;
 
-  late List<AlphabetSearchModel> filteredList = widget._list;
+  late List<AlphabetSearchModel<T>> filteredList = widget.list;
+
   LetterChar? get targetLetter => targetLetterController.value;
+
   set targetLetter(value) => targetLetterController.value = value;
+
   LetterChar? get currentLetter => currentLetterController.value;
+
   set currentLetter(value) {
     if (value != currentLetter || targetLetter != null) {
       targetLetterController.emitValue = false;
@@ -590,13 +538,13 @@ class AlphabetSearchViewState extends State<AlphabetSearchView> {
     if (newText != previousSearchText) {
       previousSearchText = newText;
       if (newText.isNotEmpty) {
-        filteredList = widget._list
+        filteredList = widget.list
             .where((x) =>
                 (x.title.toLowerCase() + (x.subtitle?.toLowerCase() ?? ''))
                     .contains(newText))
             .toList();
       } else {
-        filteredList = widget._list;
+        filteredList = widget.list;
       }
 
       if (needToSetState) {
@@ -628,9 +576,11 @@ class _AlphabetValueController<T> {
   bool emitValue = true;
 
   final _streamController = StreamController<T?>.broadcast();
+
   Stream<T?> get stream => _streamController.stream;
 
   T? get value => _value;
+
   set value(T? value) {
     if (value != _value) {
       _value = value;

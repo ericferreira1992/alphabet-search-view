@@ -1,6 +1,6 @@
 name: alphabet_search_view
 description: A scrollable ListView which you can search by dragging, normal scrolling, letter scrolling or letter clicking.
-version: 1.0.1
+version: 1.0.2
 homepage: https://ericferreira1992.github.io/alphabet-search-view/
 repository: https://github.com/ericferreira1992/alphabet-search-view
 
