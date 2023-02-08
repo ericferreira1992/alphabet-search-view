@@ -134,7 +134,7 @@ class AlphabetSearchViewState<T> extends State<AlphabetSearchView<T>> {
           if (setCurrentLetterFromItemList(letter)) {
             if (debugMode) {
               debugPrint(
-                  'LETTER - ${letter.value} (${scrollingToItem.toString()} - ${item.title} - ${positions})');
+                  'LETTER - ${letter.value} (${scrollingToItem.toString()} - ${item.title} - $positions)');
               debugPrint('PREV CURRENT - ${prevLetter?.value ?? 'null'}');
               debugPrint('CURRENT - ${letter.value}');
             }
@@ -143,7 +143,7 @@ class AlphabetSearchViewState<T> extends State<AlphabetSearchView<T>> {
         }
         if (debugMode) {
           debugPrint(
-              'LETTER/CURRENT - ${letter.value}/${currentLetter?.value ?? 'null'} (${scrollingToItem.toString()} - $firstIndex - ${positions})');
+              'LETTER/CURRENT - ${letter.value}/${currentLetter?.value ?? 'null'} (${scrollingToItem.toString()} - $firstIndex - $positions)');
         }
       }
     });
@@ -204,7 +204,7 @@ class AlphabetSearchViewState<T> extends State<AlphabetSearchView<T>> {
               final isActive = filteredList.any((g) => g.letter == letter);
               final isCurrent = (targetLetter ?? currentLetter) == letter;
 
-              final textStyle = Theme.of(context).textTheme.bodyText2;
+              final textStyle = Theme.of(context).textTheme.bodyMedium;
 
               void onDraggingFn(Offset localPosition) {
                 final distance = localPosition.dy;
@@ -223,7 +223,7 @@ class AlphabetSearchViewState<T> extends State<AlphabetSearchView<T>> {
                     targetLetter = probablyLetter;
                     if (debugMode) {
                       debugPrint(
-                          '$letterIndex - ${probablyLetter} (($aboveDistance + $distance) / $letterBoxHeight = ${aboveDistance + distance / letterBoxHeight})');
+                          '$letterIndex - $probablyLetter (($aboveDistance + $distance) / $letterBoxHeight = ${aboveDistance + distance / letterBoxHeight})');
                     }
                   }
                 } else {
@@ -237,6 +237,9 @@ class AlphabetSearchViewState<T> extends State<AlphabetSearchView<T>> {
               return SizedBox(
                 height: letterBoxHeight,
                 child: InkWell(
+                  onTap: (!isCurrent && isActive)
+                      ? () => setCurrentLetterFromLetterList(letter)
+                      : null,
                   child: Stack(
                     children: [
                       StreamBuilder(
@@ -303,7 +306,7 @@ class AlphabetSearchViewState<T> extends State<AlphabetSearchView<T>> {
                                           : '',
                                       style: Theme.of(context)
                                           .textTheme
-                                          .bodyText2
+                                          .bodyMedium
                                           ?.copyWith(
                                             fontWeight: FontWeight.w500,
                                             fontSize: 20,
@@ -319,9 +322,6 @@ class AlphabetSearchViewState<T> extends State<AlphabetSearchView<T>> {
                       ),
                     ],
                   ),
-                  onTap: (!isCurrent && isActive)
-                      ? () => setCurrentLetterFromLetterList(letter)
-                      : null,
                 ),
               );
             },
@@ -354,7 +354,7 @@ class AlphabetSearchViewState<T> extends State<AlphabetSearchView<T>> {
                   ? Center(
                       child: Text(
                         targetLetter!.value,
-                        style: Theme.of(context).textTheme.bodyText2?.copyWith(
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                               fontWeight: FontWeight.w500,
                               fontSize: 30,
                               color: Colors.white,
@@ -475,6 +475,14 @@ class AlphabetSearchViewState<T> extends State<AlphabetSearchView<T>> {
                         Transform.translate(
                           offset: Offset(0, decoration.dividerThickness),
                           child: Container(
+                            decoration: BoxDecoration(
+                              border: Border(
+                                bottom: BorderSide(
+                                  color: decoration.color,
+                                  width: decoration.dividerThickness * 2,
+                                ),
+                              ),
+                            ),
                             child: Padding(
                               padding: const EdgeInsets.only(
                                 top: 6,
@@ -485,14 +493,6 @@ class AlphabetSearchViewState<T> extends State<AlphabetSearchView<T>> {
                               child: Text(
                                 item.letter.value,
                                 style: decoration.letterHeaderTextStyle,
-                              ),
-                            ),
-                            decoration: BoxDecoration(
-                              border: Border(
-                                bottom: BorderSide(
-                                  color: decoration.color,
-                                  width: decoration.dividerThickness * 2,
-                                ),
                               ),
                             ),
                           ),

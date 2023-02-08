@@ -29,7 +29,7 @@ class AlphabetSearchDecoration {
     Color? color,
     Color? backgroundColor,
   }) {
-    final _color = color ?? _defaultColor(context);
+    final colour = color ?? _defaultColor(context);
     return AlphabetSearchDecoration._internal(
       withSearch: withSearch,
       titleTextStyle: titleStyle ?? _defaultTitleTextStyle(context),
@@ -37,11 +37,11 @@ class AlphabetSearchDecoration {
       letterHeaderTextStyle: letterHeaderTextStyle ??
           _defaultLetterHeaderTextStyle(
             context,
-            color: _color,
+            color: colour,
           ),
       dividerThickness: dividerThickness ?? 1,
       backgroundColor: backgroundColor ?? _defaultBackgroundColor(context),
-      color: _color,
+      color: colour,
     );
   }
 
@@ -50,7 +50,7 @@ class AlphabetSearchDecoration {
   }
 
   static TextStyle _defaultTitleTextStyle(BuildContext context) {
-    return Theme.of(context).textTheme.subtitle1 ??
+    return Theme.of(context).textTheme.titleMedium ??
         const TextStyle(
           fontSize: 16,
           fontWeight: FontWeight.w500,
@@ -58,7 +58,7 @@ class AlphabetSearchDecoration {
   }
 
   static TextStyle _defaultSubtitleTextStyle(BuildContext context) {
-    return Theme.of(context).textTheme.bodyText2 ??
+    return Theme.of(context).textTheme.bodyMedium ??
         const TextStyle(
           fontSize: 14,
           fontWeight: FontWeight.w400,
@@ -69,7 +69,7 @@ class AlphabetSearchDecoration {
     BuildContext context, {
     required Color color,
   }) {
-    return Theme.of(context).textTheme.headline2?.copyWith(color: color) ??
+    return Theme.of(context).textTheme.displayMedium?.copyWith(color: color) ??
         TextStyle(fontSize: 22, fontWeight: FontWeight.w500, color: color);
   }
 

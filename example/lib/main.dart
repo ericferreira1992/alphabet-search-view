@@ -1,7 +1,5 @@
-import 'package:alphabet_search_view/alphabet_search_view.dart';
 import 'package:example/examples/string_list_example_page.dart';
 import 'package:flutter/material.dart';
-import 'dart:convert';
 
 import 'examples/model_list_with_builder_example_page.dart';
 import 'examples/model_list_example_page.dart';
@@ -33,7 +31,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -74,7 +71,8 @@ class _MyHomePageState extends State<MyHomePage> {
               child: TextButton(
                 onPressed: () => Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (_) => ModeListWithBuilderExamplePage()),
+                  MaterialPageRoute(
+                      builder: (_) => const ModeListWithBuilderExamplePage()),
                 ),
                 child: const Text('ModeList (with Builder)'),
               ),

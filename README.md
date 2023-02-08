@@ -8,14 +8,14 @@ Flutter component for list and search a simple or complex data items, similar to
 - Search/filter items;
 - Customization (default is app Theme);
 - Build your own Widget to show;
-- Easy to use (Besides being beautifull 💅🏼);
+- Easy to use (Besides being beautiful 💅🏼);
 
 ## Usage
 
 Adding in `pubspec.yaml`:
 ```yaml
 dependencies:
-  alphabet_search_view: ^1.0.1
+  alphabet_search_view: ^2.0.0
 ```
 
 Import it where you want to use:
@@ -25,7 +25,7 @@ import 'package:alphabet_search_view/alphabet_search_view.dart';
 
 ### Example:
 
-Simple use:
+Specific String use:
 ```dart
 final myStringList = [
     'Katlego Dhaval',
@@ -35,22 +35,21 @@ final myStringList = [
     'Heli Jerahmeel',
 ];
 
-AlphabetSearchView.stringList(
-    list: myStringList,
-),
+AlphabetSearchView<String>.list(
+    list: myStringList.map((e) => AlphabetSearchModel<String>(title: e, data: e)).toList(),
 ```
 
-Model:
+General use:
 ```dart
 final myModelList = [
-    AlphabetSearchModel(title: 'Katlego Dhaval', subtitle: 'Dad'),
-    AlphabetSearchModel(title: 'Belenos Haniya', subtitle: 'Friend'),
-    AlphabetSearchModel(title: 'Alaattin Ísak', subtitle: 'Friend'),
-    AlphabetSearchModel(title: 'Ephraim Ríghnach', subtitle: 'Uncle'),
-    AlphabetSearchModel(title: 'Heli Jerahmeel', subtitle: 'Friend'),
+    AlphabetSearchModel<MyModel>(title: 'Katlego Dhaval', subtitle: 'Dad', data: myDataModel_1),
+    AlphabetSearchModel<MyModel>(title: 'Belenos Haniya', subtitle: 'Friend', data: myDataModel_2),
+    AlphabetSearchModel<MyModel>(title: 'Alaattin Ísak', subtitle: 'Friend', data: myDataModel_3),
+    AlphabetSearchModel<MyModel>(title: 'Ephraim Ríghnach', subtitle: 'Uncle', data: myDataModel_4),
+    AlphabetSearchModel<MyModel>(title: 'Heli Jerahmeel', subtitle: 'Friend', data: myDataModel_5),
 ];
 
-AlphabetSearchView.modelList(
+AlphabetSearchView<MyModel>.list(
     list: myModelList,
 ),
 ```
@@ -65,8 +64,8 @@ final myStringList = [
     'Heli Jerahmeel',
 ];
 
-AlphabetSearchView.stringList(
-    list: myStringList,
+AlphabetSearchView<String>.list(
+    list: myStringList.map((e) => AlphabetSearchModel<String>(title: e, data: e)).toList(),
     buildItem: (context, index, item) => Card(
         child: Text(item.title),
     ),
@@ -75,8 +74,8 @@ AlphabetSearchView.stringList(
 
 With tap callback:
 ```dart
-AlphabetSearchView.stringList(
-    list: myStringList,
+AlphabetSearchView<String>.list(
+    list: myStringList.map((e) => AlphabetSearchModel<String>(title: e, data: e)).toList(),
     onItemTap: (context, index, item) {
         print(item.title);
     },
@@ -86,7 +85,7 @@ AlphabetSearchView.stringList(
 ## Customization
 
 ```dart
-AlphabetSearchView.stringList(
+AlphabetSearchView<String>.list(
     decoration: AlphabetSearchDecoration.fromContext(
         context,
         withSearch?: false, // default is: true
@@ -97,6 +96,6 @@ AlphabetSearchView.stringList(
         color?: Color, // default is: ColorScheme.primary
         backgroundColor?: Color, // default is: Theme.scaffoldBackgroundColor
     ),
-    list: myStringList,
+    list: myStringList.map((e) => AlphabetSearchModel<String>(title: e, data: e)).toList(),
 ),
 ```  

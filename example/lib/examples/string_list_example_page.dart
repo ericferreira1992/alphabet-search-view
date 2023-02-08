@@ -7,6 +7,14 @@ class StringListExamplePage extends StatelessWidget {
 
   final Faker faker = Faker.instance;
 
+  final myStringList = [
+    'Katlego Dhaval',
+    'Belenos Haniya',
+    'Alaattin Ísak',
+    'Ephraim Ríghnach',
+    'Heli Jerahmeel',
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,8 +27,8 @@ class StringListExamplePage extends StatelessWidget {
           list: List.generate(
               500,
               (e) => AlphabetSearchModel<String>(
-                    title: faker.name.firstName() + ' ' + faker.name.lastName(),
-                    data: faker.name.firstName() + ' ' + faker.name.lastName(),
+                    title: '${faker.name.firstName()} ${faker.name.lastName()}',
+                    data: '${faker.name.firstName()} ${faker.name.lastName()}',
                   )).toList(),
         ),
       ),

@@ -1,6 +1,6 @@
-## 1.0.2
+## 2.0.0
 
-* Removed the named constructors and added a generic one for all variable types
+* Breaking Change: Removed the named constructors and replaced it with a generic one for all variable types
 
 ## 1.0.0
 

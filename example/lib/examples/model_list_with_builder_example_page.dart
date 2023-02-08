@@ -42,7 +42,7 @@ class _ModeListWithBuilderExamplePageState
     super.initState();
     listItems = List.generate(500, (e) {
       return DataItem(
-        name: faker.name.firstName() + ' ' + faker.name.lastName(),
+        name: '${faker.name.firstName()} ${faker.name.lastName()}',
         birthdate: formatter.format(faker.date.past(DateTime.now())),
         website: faker.internet.url(),
         genre: faker.music.genre(),
@@ -61,7 +61,7 @@ class _ModeListWithBuilderExamplePageState
         child: AlphabetSearchView<DataItem>.list(
           decoration: AlphabetSearchDecoration.fromContext(
             context,
-            titleStyle: Theme.of(context).textTheme.subtitle1?.copyWith(
+            titleStyle: Theme.of(context).textTheme.titleMedium?.copyWith(
                   fontWeight: FontWeight.w600,
                 ),
           ),
@@ -108,7 +108,7 @@ class _ModeListWithBuilderExamplePageState
                           width: 5,
                           color: Theme.of(context)
                               .textTheme
-                              .bodyText1!
+                              .bodyLarge!
                               .color!
                               .withOpacity(.1)),
                     ),
@@ -122,14 +122,14 @@ class _ModeListWithBuilderExamplePageState
                         Flexible(
                           child: Text(
                             item.title,
-                            style: Theme.of(context).textTheme.headline6,
+                            style: Theme.of(context).textTheme.titleLarge,
                           ),
                         ),
                         const SizedBox(height: 4),
                         Flexible(
                           child: Text(
                             item.subtitle!,
-                            style: Theme.of(context).textTheme.bodyText2,
+                            style: Theme.of(context).textTheme.bodyMedium,
                           ),
                         )
                       ],
