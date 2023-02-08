@@ -17,21 +17,22 @@ class ModelListExamplePage extends StatelessWidget {
       ),
       body: SafeArea(
         bottom: false,
-        child: AlphabetSearchView.modelList(
+        child: AlphabetSearchView<String>.list(
           decoration: AlphabetSearchDecoration.fromContext(context,
-              titleStyle: Theme.of(context).textTheme.subtitle1?.copyWith(
+              titleStyle: Theme.of(context).textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.w600,
                   )),
           list: List.generate(500, (e) {
-            final name = faker.name.firstName() + ' ' + faker.name.lastName();
+            final name = '${faker.name.firstName()} ${faker.name.lastName()}';
             final info = [
               'Birthdate: ${formatter.format(faker.date.past(DateTime.now()))}.',
               'Music gender: ${faker.music.genre()}.',
               'Website: ${faker.internet.url()}.',
             ];
-            return AlphabetSearchModel(
+            return AlphabetSearchModel<String>(
               title: name,
               subtitle: info.join('\n'),
+              data: name,
             );
           }).toList(),
         ),

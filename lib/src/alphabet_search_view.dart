@@ -7,21 +7,22 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
-class AlphabetSearchView extends StatefulWidget {
-  final List<AlphabetSearchModel> _list;
+class AlphabetSearchView<T> extends StatefulWidget {
+  final List<AlphabetSearchModel<T>> _list;
   final AlphabetSearchDecoration? _decoration;
   final void Function(
-      BuildContext context, int index, AlphabetSearchModel item)? _onItemTap;
+      BuildContext context, int index, AlphabetSearchModel<T> item)? _onItemTap;
   final Widget Function(
-      BuildContext context, int index, AlphabetSearchModel item)? _buildItem;
+      BuildContext context, int index, AlphabetSearchModel<T> item)? _buildItem;
   final bool _debugMode;
 
   const AlphabetSearchView._internal({
     Key? key,
-    required List<AlphabetSearchModel> list,
-    Function(BuildContext context, int index, AlphabetSearchModel item)?
+    required List<AlphabetSearchModel<T>> list,
+    Function(BuildContext context, int index, AlphabetSearchModel<T> item)?
         onItemTap,
-    Widget Function(BuildContext context, int index, AlphabetSearchModel item)?
+    Widget Function(
+            BuildContext context, int index, AlphabetSearchModel<T> item)?
         buildItem,
     AlphabetSearchDecoration? decoration,
     required bool debugMode,
@@ -32,38 +33,13 @@ class AlphabetSearchView extends StatefulWidget {
         _debugMode = debugMode,
         super(key: key);
 
-  factory AlphabetSearchView.stringList({
+  factory AlphabetSearchView.list({
     Key? key,
-    required List<String> list,
-    void Function(BuildContext context, int index, AlphabetSearchModel item)?
+    required List<AlphabetSearchModel<T>> list,
+    Function(BuildContext context, int index, AlphabetSearchModel<T> item)?
         onItemTap,
-    Widget Function(BuildContext context, int index, AlphabetSearchModel item)?
-        buildItem,
-    AlphabetSearchDecoration? decoration,
-    bool debugMode = false,
-  }) {
-    assert(list.isNotEmpty,
-        'Property list can\'t be empty, it needs to have at least 1 element on the list.');
-    list.sort((a, b) => a.compareTo(b));
-    return AlphabetSearchView._internal(
-      key: key,
-      list: list
-          .where((text) => text.isNotEmpty)
-          .map((text) => AlphabetSearchModel(title: text))
-          .toList(),
-      onItemTap: onItemTap,
-      buildItem: buildItem,
-      decoration: decoration,
-      debugMode: debugMode,
-    );
-  }
-
-  factory AlphabetSearchView.modelList({
-    Key? key,
-    required List<AlphabetSearchModel> list,
-    Function(BuildContext context, int index, AlphabetSearchModel item)?
-        onItemTap,
-    Widget Function(BuildContext context, int index, AlphabetSearchModel item)?
+    Widget Function(
+            BuildContext context, int index, AlphabetSearchModel<T> item)?
         buildItem,
     AlphabetSearchDecoration? decoration,
     bool debugMode = false,
@@ -73,7 +49,10 @@ class AlphabetSearchView extends StatefulWidget {
     list.sort((a, b) => a.title.compareTo(b.title));
     return AlphabetSearchView._internal(
       key: key,
-      list: list.where((item) => item.title.isNotEmpty).toList(),
+      list: list
+          .where((item) => item.title.isNotEmpty)
+          .toList()
+          .cast<AlphabetSearchModel<T>>(),
       onItemTap: onItemTap,
       buildItem: buildItem,
       decoration: decoration,
@@ -82,10 +61,10 @@ class AlphabetSearchView extends StatefulWidget {
   }
 
   @override
-  State<AlphabetSearchView> createState() => AlphabetSearchViewState();
+  State<AlphabetSearchView<T>> createState() => AlphabetSearchViewState<T>();
 }
 
-class AlphabetSearchViewState extends State<AlphabetSearchView> {
+class AlphabetSearchViewState<T> extends State<AlphabetSearchView<T>> {
   late final AlphabetSearchDecoration decoration =
       widget._decoration ?? AlphabetSearchDecoration.fromDefault(context);
   late final bool debugMode = widget._debugMode;
@@ -102,16 +81,20 @@ class AlphabetSearchViewState extends State<AlphabetSearchView> {
   late final targetLetterController = TargetLetterController(null);
 
   late final Function(
-          BuildContext context, int index, AlphabetSearchModel item)?
+          BuildContext context, int index, AlphabetSearchModel<T> item)?
       onItemTap = widget._onItemTap;
   late final Widget Function(
-          BuildContext context, int index, AlphabetSearchModel item)?
+          BuildContext context, int index, AlphabetSearchModel<T> item)?
       buildItem = widget._buildItem;
 
-  late List<AlphabetSearchModel> filteredList = widget._list;
+  late List<AlphabetSearchModel<T>> filteredList = widget._list;
+
   LetterChar? get targetLetter => targetLetterController.value;
+
   set targetLetter(value) => targetLetterController.value = value;
+
   LetterChar? get currentLetter => currentLetterController.value;
+
   set currentLetter(value) {
     if (value != currentLetter || targetLetter != null) {
       targetLetterController.emitValue = false;
@@ -151,7 +134,7 @@ class AlphabetSearchViewState extends State<AlphabetSearchView> {
           if (setCurrentLetterFromItemList(letter)) {
             if (debugMode) {
               debugPrint(
-                  'LETTER - ${letter.value} (${scrollingToItem.toString()} - ${item.title} - ${positions})');
+                  'LETTER - ${letter.value} (${scrollingToItem.toString()} - ${item.title} - $positions)');
               debugPrint('PREV CURRENT - ${prevLetter?.value ?? 'null'}');
               debugPrint('CURRENT - ${letter.value}');
             }
@@ -160,7 +143,7 @@ class AlphabetSearchViewState extends State<AlphabetSearchView> {
         }
         if (debugMode) {
           debugPrint(
-              'LETTER/CURRENT - ${letter.value}/${currentLetter?.value ?? 'null'} (${scrollingToItem.toString()} - $firstIndex - ${positions})');
+              'LETTER/CURRENT - ${letter.value}/${currentLetter?.value ?? 'null'} (${scrollingToItem.toString()} - $firstIndex - $positions)');
         }
       }
     });
@@ -221,7 +204,7 @@ class AlphabetSearchViewState extends State<AlphabetSearchView> {
               final isActive = filteredList.any((g) => g.letter == letter);
               final isCurrent = (targetLetter ?? currentLetter) == letter;
 
-              final textStyle = Theme.of(context).textTheme.bodyText2;
+              final textStyle = Theme.of(context).textTheme.bodyMedium;
 
               void onDraggingFn(Offset localPosition) {
                 final distance = localPosition.dy;
@@ -240,7 +223,7 @@ class AlphabetSearchViewState extends State<AlphabetSearchView> {
                     targetLetter = probablyLetter;
                     if (debugMode) {
                       debugPrint(
-                          '$letterIndex - ${probablyLetter} (($aboveDistance + $distance) / $letterBoxHeight = ${aboveDistance + distance / letterBoxHeight})');
+                          '$letterIndex - $probablyLetter (($aboveDistance + $distance) / $letterBoxHeight = ${aboveDistance + distance / letterBoxHeight})');
                     }
                   }
                 } else {
@@ -254,6 +237,9 @@ class AlphabetSearchViewState extends State<AlphabetSearchView> {
               return SizedBox(
                 height: letterBoxHeight,
                 child: InkWell(
+                  onTap: (!isCurrent && isActive)
+                      ? () => setCurrentLetterFromLetterList(letter)
+                      : null,
                   child: Stack(
                     children: [
                       StreamBuilder(
@@ -320,7 +306,7 @@ class AlphabetSearchViewState extends State<AlphabetSearchView> {
                                           : '',
                                       style: Theme.of(context)
                                           .textTheme
-                                          .bodyText2
+                                          .bodyMedium
                                           ?.copyWith(
                                             fontWeight: FontWeight.w500,
                                             fontSize: 20,
@@ -336,9 +322,6 @@ class AlphabetSearchViewState extends State<AlphabetSearchView> {
                       ),
                     ],
                   ),
-                  onTap: (!isCurrent && isActive)
-                      ? () => setCurrentLetterFromLetterList(letter)
-                      : null,
                 ),
               );
             },
@@ -371,7 +354,7 @@ class AlphabetSearchViewState extends State<AlphabetSearchView> {
                   ? Center(
                       child: Text(
                         targetLetter!.value,
-                        style: Theme.of(context).textTheme.bodyText2?.copyWith(
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                               fontWeight: FontWeight.w500,
                               fontSize: 30,
                               color: Colors.white,
@@ -492,6 +475,14 @@ class AlphabetSearchViewState extends State<AlphabetSearchView> {
                         Transform.translate(
                           offset: Offset(0, decoration.dividerThickness),
                           child: Container(
+                            decoration: BoxDecoration(
+                              border: Border(
+                                bottom: BorderSide(
+                                  color: decoration.color,
+                                  width: decoration.dividerThickness * 2,
+                                ),
+                              ),
+                            ),
                             child: Padding(
                               padding: const EdgeInsets.only(
                                 top: 6,
@@ -502,14 +493,6 @@ class AlphabetSearchViewState extends State<AlphabetSearchView> {
                               child: Text(
                                 item.letter.value,
                                 style: decoration.letterHeaderTextStyle,
-                              ),
-                            ),
-                            decoration: BoxDecoration(
-                              border: Border(
-                                bottom: BorderSide(
-                                  color: decoration.color,
-                                  width: decoration.dividerThickness * 2,
-                                ),
                               ),
                             ),
                           ),
@@ -628,9 +611,11 @@ class _AlphabetValueController<T> {
   bool emitValue = true;
 
   final _streamController = StreamController<T?>.broadcast();
+
   Stream<T?> get stream => _streamController.stream;
 
   T? get value => _value;
+
   set value(T? value) {
     if (value != _value) {
       _value = value;
